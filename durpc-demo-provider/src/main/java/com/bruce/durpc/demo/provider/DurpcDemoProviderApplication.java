@@ -42,17 +42,17 @@ public class DurpcDemoProviderApplication {
 		return providerBootstrp.invoke(request);
 	}
 
-	@Bean
-	ApplicationRunner getRunner(){
-		return x -> {
-			RpcRequest request = new RpcRequest();
-			request.setService("com.bruce.durpc.demo.api.UserService");
-			request.setMethod("findById");
-			request.setArgs(new Object[]{10});
-
-			RpcResponse rpcResponse = invoke(request);
-			System.out.println("return : " + rpcResponse.getData());
-		};
-	}
+//	@Bean
+//	ApplicationRunner getRunner(){
+//		return x -> {
+//			RpcRequest request = new RpcRequest();
+//			request.setService("com.bruce.durpc.demo.api.UserService");
+//			request.setMethod("findById");
+//			request.setArgs(new Object[]{10});
+//
+//			RpcResponse rpcResponse = invoke(request);
+//			System.out.println("return : " + rpcResponse.getData());
+//		};
+//	}
 
 }

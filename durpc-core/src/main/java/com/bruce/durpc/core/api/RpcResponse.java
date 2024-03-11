@@ -14,4 +14,5 @@ public class RpcResponse<T> {
 
     private boolean status; //状态
     private T data; //数据
+    Exception ex;//异常
 }

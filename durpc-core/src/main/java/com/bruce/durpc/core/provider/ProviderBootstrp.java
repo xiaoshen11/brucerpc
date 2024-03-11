@@ -3,6 +3,8 @@ package com.bruce.durpc.core.provider;
 import com.bruce.durpc.core.annotation.DuProvider;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
+import com.bruce.durpc.core.util.MethodUtils;
+import com.sun.jdi.InvocationException;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +41,23 @@ public class ProviderBootstrp implements ApplicationContextAware {
     }
 
     public RpcResponse invoke(RpcRequest request) {
+        // 处理本地方法
+        if(MethodUtils.checkLocalMethod(request.getMethod())){
+            return null;
+        }
+        RpcResponse rpcResponse = new RpcResponse();
         Object bean = skeleton.get(request.getService());
         try {
             Method method = findMethod(bean.getClass(),request.getMethod());
             Object result = method.invoke(bean,request.getArgs());
-            return new RpcResponse<>(true,result);
+            rpcResponse.setStatus(true);
+            rpcResponse.setData(result);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            rpcResponse.setEx(new RuntimeException(e.getTargetException().getMessage()));
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            rpcResponse.setEx(new RuntimeException(e.getMessage()));
         }
+        return rpcResponse;
     }
 
     private Method findMethod(Class<?> aClass, String methodName) {

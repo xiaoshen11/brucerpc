@@ -22,6 +22,7 @@
         <module>durpc-core</module>
         <module>durpc-demo-api</module>
         <module>durpc-demo-provider</module>
+        <module>durpc-demo-consumer</module>
     </modules>
 
     <build>

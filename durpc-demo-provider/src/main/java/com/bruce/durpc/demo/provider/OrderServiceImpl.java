@@ -16,6 +16,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(Integer id) {
+        if(id == 404){
+            throw new RuntimeException("findById exception 404");
+        }
+
         return new Order(id.longValue(),16.8f);
     }
 }

@@ -7,4 +7,8 @@ public interface UserService {
 
     User findById(Integer id);
 
+    int getId(int id);
+
+    String getName();
+
 }
