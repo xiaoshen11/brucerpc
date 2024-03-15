@@ -38,7 +38,7 @@ public class DuInvocationHandler implements InvocationHandler {
 
         RpcRequest request = new RpcRequest();
         request.setService(service.getCanonicalName());
-        request.setMethod(method.getName());
+        request.setMethodSign(MethodUtils.methodSign(method));
         request.setArgs(args);
 
         RpcResponse response = post(request);
@@ -54,13 +54,6 @@ public class DuInvocationHandler implements InvocationHandler {
             Exception ex = response.getEx();
 //            ex.printStackTrace();
             throw new RuntimeException(ex);
-        }
-    }
-
-    private static void checkLocalMethod(Method method) {
-        String name = method.getName();
-        if(name.equals("toString") || name.equals("hashCode") || name.equals("clone") || name.equals("clone")){
-
         }
     }
 

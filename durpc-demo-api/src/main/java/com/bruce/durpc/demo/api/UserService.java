@@ -5,7 +5,9 @@ package com.bruce.durpc.demo.api;
  */
 public interface UserService {
 
-    User findById(Integer id);
+    User findById(int id);
+
+    User findById(int id,String name);
 
     int getId(int id);
 

@@ -35,16 +35,19 @@ public class DurpcDemoConsumerApplication {
     public ApplicationRunner consumerRunner(){
         return x -> {
 //            User user = userService.findById(1);
-//            System.out.println("RPC result userService.findById(1) = " +user);
+//            System.out.println("RPC result userService.findById(1) = " + user);
 
-            int id = userService.getId(11);
-            System.out.println("RPC result userService.getId(11) = " +id);
+            User user = userService.findById(11);
+            System.out.println("RPC result userService.findById(11) = " + user);
+
+            User user2 = userService.findById(11,"bruce");
+            System.out.println("RPC result userService.findById(11,\"bruce\") = " + user2);
 
             String name = userService.getName();
-            System.out.println("RPC result userService.getName() = " +name);
+            System.out.println("RPC result userService.getName() = " + name);
 
 //            Order order = orderService.findById(1);
-//            System.out.println("RPC result orderService.findById(1) = " +order);
+//            System.out.println("RPC result orderService.findById(1) = " + order);
 
   //            Order order404 = orderService.findById(404);
 //            System.out.println("RPC result orderService.findById(404) = " + order404);
