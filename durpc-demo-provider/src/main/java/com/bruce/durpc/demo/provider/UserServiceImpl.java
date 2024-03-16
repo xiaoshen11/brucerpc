@@ -3,6 +3,8 @@ package com.bruce.durpc.demo.provider;
 import com.bruce.durpc.core.annotation.DuProvider;
 import com.bruce.durpc.demo.api.User;
 import com.bruce.durpc.demo.api.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,9 +14,12 @@ import org.springframework.stereotype.Component;
 @DuProvider
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    Environment environment;
+
     @Override
     public User findById(int id) {
-        return new User(id,"Du-" + System.currentTimeMillis());
+        return new User(id,"Du-" + environment.getProperty("server.port") + "_" + System.currentTimeMillis());
     }
 
     @Override

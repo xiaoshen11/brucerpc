@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -30,14 +31,19 @@ public class DurpcDemoConsumerApplication {
         SpringApplication.run(DurpcDemoConsumerApplication.class, args);
     }
 
+    @RequestMapping("/")
+    public User findById(int id){
+        return userService.findById(id);
+    }
 
     @Bean
     public ApplicationRunner consumerRunner(){
         return x -> {
 
+            System.out.println(userService.getBoolean(false));
             Arrays.stream(userService.getIds()).forEach(System.out::println);
-            Arrays.stream(userService.getLongIds()).forEach(System.out::println);
-            Arrays.stream(userService.getIds(new int[]{1,2,3})).forEach(System.out::println);
+//            Arrays.stream(userService.getLongIds()).forEach(System.out::println);
+//            Arrays.stream(userService.getIds(new int[]{1,2,3})).forEach(System.out::println);
 
 //            User user = userService.findById(1);
 //            System.out.println(userService.getId(11.0f));

@@ -1,2 +1,4 @@
 server:
   port: 8089
+durpc:
+  providers: http://localhost:8081/,http://localhost:8082/,http://localhost:8083/

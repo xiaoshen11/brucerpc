@@ -3,6 +3,9 @@ package com.bruce.durpc.core.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bruce.durpc.core.api.LoadBalancer;
+import com.bruce.durpc.core.api.Router;
+import com.bruce.durpc.core.api.RpcContext;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.util.MethodUtils;
@@ -17,7 +20,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,11 +29,15 @@ import java.util.concurrent.TimeUnit;
 public class DuInvocationHandler implements InvocationHandler {
 
     Class<?> service;
+    RpcContext context;
+    List<String> providers;
 
     final static MediaType JSONTYPE = MediaType.get("application/json; charset=utf-8");
 
-    public DuInvocationHandler(Class<?> service) {
+    public DuInvocationHandler(Class<?> service, RpcContext context, List<String> providers) {
         this.service = service;
+        this.context = context;
+        this.providers = providers;
     }
 
     @Override
@@ -45,7 +52,11 @@ public class DuInvocationHandler implements InvocationHandler {
         request.setMethodSign(MethodUtils.methodSign(method));
         request.setArgs(args);
 
-        RpcResponse response = post(request);
+        List<String> urls = context.getRouter().route(this.providers);
+        String url = (String) context.getLoadBalancer().choose(urls);
+        System.out.println("loadBalancer.choose(urls) ======= " + url);
+
+        RpcResponse response = post(request, url);
         if(response.isStatus()){
             Object data = response.getData();
             if(data instanceof JSONObject jsonResult) {
@@ -75,11 +86,11 @@ public class DuInvocationHandler implements InvocationHandler {
             .connectTimeout(1,TimeUnit.SECONDS)
             .build();
 
-    public RpcResponse post(RpcRequest rpcRequest){
+    public RpcResponse post(RpcRequest rpcRequest,String url){
         String reqJson = JSON.toJSONString(rpcRequest);
         System.out.println("reqJson ====== " + reqJson);
         Request request = new Request.Builder()
-                .url("http://localhost:8080/")
+                .url(url)
                 .post(RequestBody.create(reqJson,JSONTYPE))
                 .build();
         String respJson = null;

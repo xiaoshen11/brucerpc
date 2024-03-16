@@ -1,5 +1,10 @@
+### 获取8089用户信息
+GET http://localhost:8089/?id=11
+Content-Type: application/json
+
+
 ### 获取用户信息
-POST http://localhost:8080/
+POST http://localhost:8081/
 Content-Type: application/json
 
 {
@@ -10,7 +15,7 @@ Content-Type: application/json
 }
 
 ### 获取订单信息
-POST http://localhost:8080/
+POST http://localhost:8081/
 Content-Type: application/json
 
 {
@@ -21,7 +26,7 @@ Content-Type: application/json
 }
 
 ### toString
-POST http://localhost:8080/
+POST http://localhost:8081/
 Content-Type: application/json
 
 {
