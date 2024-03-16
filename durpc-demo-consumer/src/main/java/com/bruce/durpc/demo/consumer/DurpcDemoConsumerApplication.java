@@ -34,22 +34,28 @@ public class DurpcDemoConsumerApplication {
     @Bean
     public ApplicationRunner consumerRunner(){
         return x -> {
+
+            Arrays.stream(userService.getIds()).forEach(System.out::println);
+            Arrays.stream(userService.getLongIds()).forEach(System.out::println);
+            Arrays.stream(userService.getIds(new int[]{1,2,3})).forEach(System.out::println);
+
 //            User user = userService.findById(1);
-//            System.out.println("RPC result userService.findById(1) = " + user);
-
-            User user = userService.findById(11);
-            System.out.println("RPC result userService.findById(11) = " + user);
-
-            User user2 = userService.findById(11,"bruce");
-            System.out.println("RPC result userService.findById(11,\"bruce\") = " + user2);
-
-            String name = userService.getName();
-            System.out.println("RPC result userService.getName() = " + name);
-
+//            System.out.println(userService.getId(11.0f));
+//            System.out.println(userService.getId(new User(100,"Du")));
+//
+//            User user = userService.findById(11);
+//            System.out.println("RPC result userService.findById(11) = " + user);
+//
+//            User user2 = userService.findById(11,"bruce");
+//            System.out.println("RPC result userService.findById(11,\"bruce\") = " + user2);
+//
+//            System.out.println(userService.getName());
+//            System.out.println(userService.getName(123));
+//
 //            Order order = orderService.findById(1);
 //            System.out.println("RPC result orderService.findById(1) = " + order);
 
-  //            Order order404 = orderService.findById(404);
+//              Order order404 = orderService.findById(404);
 //            System.out.println("RPC result orderService.findById(404) = " + order404);
         };
     }

@@ -9,8 +9,21 @@ public interface UserService {
 
     User findById(int id,String name);
 
-    int getId(int id);
+    long getId(long id);
+
+    long getId(float id);
+
+    long getId(User user);
 
     String getName();
+
+    String getName(int id);
+
+    int[] getIds();
+
+    int[] getIds(int[] ids);
+    long[] getLongIds();
+
+    boolean getBoolean(boolean b);
 
 }

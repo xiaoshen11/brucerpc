@@ -45,22 +45,21 @@ public class DurpcDemoProviderApplication {
 	@Bean
 	ApplicationRunner getRunner(){
 		return x -> {
-			RpcRequest request = new RpcRequest();
-			request.setService("com.bruce.durpc.demo.api.UserService");
-			request.setMethodSign("findById@1_int");
-			request.setArgs(new Object[]{10});
-
-			RpcResponse rpcResponse = invoke(request);
-			System.out.println("return : " + rpcResponse.getData());
-
-			//
-			RpcRequest request2 = new RpcRequest();
-			request2.setService("com.bruce.durpc.demo.api.UserService");
-			request2.setMethodSign("findById@2_int_java.lang.String");
-			request2.setArgs(new Object[]{12,"bruce"});
-
-			RpcResponse rpcResponse2 = invoke(request2);
-			System.out.println("return : " + rpcResponse2.getData());
+//			RpcRequest request = new RpcRequest();
+//			request.setService("com.bruce.durpc.demo.api.UserService");
+//			request.setMethodSign("findById@1_int");
+//			request.setArgs(new Object[]{10});
+//
+//			RpcResponse rpcResponse = invoke(request);
+//			System.out.println("return : " + rpcResponse.getData());
+//
+//			RpcRequest request2 = new RpcRequest();
+//			request2.setService("com.bruce.durpc.demo.api.UserService");
+//			request2.setMethodSign("findById@2_int_java.lang.String");
+//			request2.setArgs(new Object[]{12,"bruce"});
+//
+//			RpcResponse rpcResponse2 = invoke(request2);
+//			System.out.println("return : " + rpcResponse2.getData());
 		};
 	}
 

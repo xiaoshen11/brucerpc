@@ -1,10 +1,12 @@
 package com.bruce.durpc.core.consumer;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.util.MethodUtils;
+import com.bruce.durpc.core.util.TypeUtils;
 import okhttp3.ConnectionPool;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -12,8 +14,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,7 +36,7 @@ public class DuInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 处理本地方法
-        if(MethodUtils.checkLocalMethod(method.getName())){
+        if(MethodUtils.checkLocalMethod(method)){
             return null;
         }
 
@@ -46,9 +50,16 @@ public class DuInvocationHandler implements InvocationHandler {
             Object data = response.getData();
             if(data instanceof JSONObject jsonResult) {
                 return jsonResult.toJavaObject(method.getReturnType());
+            }else if(data instanceof JSONArray jsonArray){
+                Object[] array = jsonArray.toArray();
+                Class<?> componentType = method.getReturnType().componentType();
+                Object resultArray = Array.newInstance(componentType, array.length);
+                for (int i = 0; i < array.length; i++) {
+                    Array.set(resultArray,i,array[i]);
+                }
+                return resultArray;
             }else{
-                // 处理基本类型
-                return data;
+                return TypeUtils.cast(data,method.getReturnType());
             }
         }else {
             Exception ex = response.getEx();
