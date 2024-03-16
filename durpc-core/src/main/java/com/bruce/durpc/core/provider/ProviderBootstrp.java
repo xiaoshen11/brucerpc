@@ -15,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,14 +39,16 @@ public class ProviderBootstrp implements ApplicationContextAware {
     }
 
     private void genInterface(Object x) {
-        Class<?> itface = x.getClass().getInterfaces()[0];
-        Method[] methods = itface.getMethods();
-        for (Method method : methods) {
-            if(MethodUtils.checkLocalMethod(method)){
-                continue;
-            }
-            createProvider(itface,x,method);
-        }
+        Arrays.stream(x.getClass().getInterfaces()).forEach(
+                itface -> {
+                    Method[] methods = itface.getMethods();
+                    for (Method method : methods) {
+                        if (MethodUtils.checkLocalMethod(method)) {
+                            continue;
+                        }
+                        createProvider(itface, x, method);
+                    }
+                });
     }
 
     private void createProvider(Class<?> itface, Object x, Method method) {
