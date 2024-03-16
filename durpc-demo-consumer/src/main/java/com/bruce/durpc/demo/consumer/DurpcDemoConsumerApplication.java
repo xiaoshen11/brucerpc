@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @Import(ConsumerConfig.class)
@@ -39,9 +41,13 @@ public class DurpcDemoConsumerApplication {
     @Bean
     public ApplicationRunner consumerRunner(){
         return x -> {
-
-            System.out.println(userService.getBoolean(false));
-            Arrays.stream(userService.getIds()).forEach(System.out::println);
+//            System.out.println(userService.getIdByList(Arrays.asList(new Integer[]{4,5,6})));
+//            Map map = new HashMap<String,Integer>();
+//            map.put("id",6);
+//            System.out.println(userService.getIdByMap(map));
+            userService.getIdList(Arrays.asList(new Integer[]{4,5,6})).forEach(System.out::println);
+//            System.out.println(userService.getBoolean(false));
+//            Arrays.stream(userService.getIds()).forEach(System.out::println);
 //            Arrays.stream(userService.getLongIds()).forEach(System.out::println);
 //            Arrays.stream(userService.getIds(new int[]{1,2,3})).forEach(System.out::println);
 

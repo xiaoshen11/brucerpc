@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @date 2024/3/7
  */
@@ -60,6 +63,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public int[] getIds(int[] ids) {
         return ids;
+    }
+
+    @Override
+    public List<Integer> getIdList(List<Integer> ids) {
+        return ids;
+    }
+
+    @Override
+    public Integer getIdByList(List<Integer> ids) {
+        return ids.get(0);
+    }
+
+    @Override
+    public Map<String,Integer> getIdByMap(Map<String,Integer> map) {
+        return map;
     }
 
     @Override

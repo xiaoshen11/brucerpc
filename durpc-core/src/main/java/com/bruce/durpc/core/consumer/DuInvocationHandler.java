@@ -20,7 +20,13 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,9 +65,37 @@ public class DuInvocationHandler implements InvocationHandler {
         RpcResponse response = post(request, url);
         if(response.isStatus()){
             Object data = response.getData();
+            Class<?> type = method.getReturnType();
             if(data instanceof JSONObject jsonResult) {
-                return jsonResult.toJavaObject(method.getReturnType());
+                if(Map.class.isAssignableFrom(type)){
+                    Map resultMap = new HashMap();
+                    Type genericReturnType = method.getGenericReturnType();
+                    if(genericReturnType instanceof ParameterizedType parameterizedType){
+                        Class<?> keyType = (Class<?>)parameterizedType.getActualTypeArguments()[0];
+                        Class<?> valueType = (Class<?>)parameterizedType.getActualTypeArguments()[1];
+                        jsonResult.entrySet().stream().forEach(
+                                e -> {
+                                    Object key = TypeUtils.cast(e.getKey(),keyType);
+                                    Object value = TypeUtils.cast(e.getValue(),valueType);
+                                    resultMap.putIfAbsent(key,value);
+                                }
+                        );
+
+                    }
+                    return resultMap;
+                }
+                return jsonResult.toJavaObject(type);
             }else if(data instanceof JSONArray jsonArray){
+                if(Collection.class.isAssignableFrom(type)){
+                    Object[] array = jsonArray.toArray();
+                    List resultList = new ArrayList<>();
+                    Class<?> componentType = (Class<?>)(((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0]);
+                    for (int i = 0; i < array.length; i++) {
+                        resultList.add(TypeUtils.cast(array[i],componentType));
+                    }
+                    return resultList;
+                }
+
                 Object[] array = jsonArray.toArray();
                 Class<?> componentType = method.getReturnType().componentType();
                 Object resultArray = Array.newInstance(componentType, array.length);

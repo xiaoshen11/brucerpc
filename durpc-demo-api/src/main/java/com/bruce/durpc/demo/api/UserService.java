@@ -1,5 +1,8 @@
 package com.bruce.durpc.demo.api;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @date 2024/3/7
  */
@@ -22,6 +25,13 @@ public interface UserService {
     int[] getIds();
 
     int[] getIds(int[] ids);
+
+    List<Integer> getIdList(List<Integer> ids);
+
+    Integer getIdByList(List<Integer> ids);
+
+    Map<String,Integer> getIdByMap(Map<String,Integer> map);
+
     long[] getLongIds();
 
     boolean getBoolean(boolean b);
