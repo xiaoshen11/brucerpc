@@ -3,13 +3,12 @@ package com.bruce.durpc.core.cluster;
 import com.bruce.durpc.core.api.LoadBalancer;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @date 2024/3/16
  */
-public class RandomRibonLoadBalancer<T> implements LoadBalancer<T> {
+public class RandomRobinLoadBalancer<T> implements LoadBalancer<T> {
 
     AtomicInteger integer = new AtomicInteger(0);
 

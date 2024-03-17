@@ -7,9 +7,9 @@ import java.util.List;
  */
 public interface RegistryCenter {
 
-    void start();
+    void start(); // provider/consumer
 
-    void stop();
+    void stop(); // provider/consumer
 
     // provider
     void register(String service, String instance);

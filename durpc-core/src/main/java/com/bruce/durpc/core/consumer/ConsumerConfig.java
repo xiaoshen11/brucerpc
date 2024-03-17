@@ -3,9 +3,7 @@ package com.bruce.durpc.core.consumer;
 import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
-import com.bruce.durpc.core.cluster.RandomLoadBalancer;
-import com.bruce.durpc.core.cluster.RandomRibonLoadBalancer;
-import com.bruce.durpc.core.provider.ProviderBootstrp;
+import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
@@ -22,7 +20,7 @@ import java.util.List;
 public class ConsumerConfig {
 
     @Value("${durpc.providers}")
-    String services;
+    String servers;
 
     @Bean
     ConsumerBootstrap consumerBootstrap(){
@@ -42,7 +40,7 @@ public class ConsumerConfig {
 
     @Bean
     public LoadBalancer loadBalancer(){
-        return new RandomRibonLoadBalancer();
+        return new RandomRobinLoadBalancer();
     }
 
     @Bean
@@ -52,7 +50,7 @@ public class ConsumerConfig {
 
     @Bean(initMethod = "start",destroyMethod = "stop")
     public RegistryCenter consumer_rc(){
-        return new RegistryCenter.StaicRegistryCenter(List.of(services.split(",")));
+        return new RegistryCenter.StaicRegistryCenter(List.of(servers.split(",")));
     }
 
 }
