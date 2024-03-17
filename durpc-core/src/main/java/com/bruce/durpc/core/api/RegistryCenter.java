@@ -1,5 +1,6 @@
 package com.bruce.durpc.core.api;
 
+import com.bruce.durpc.core.registry.ChangeListener;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public interface RegistryCenter {
     // consumer
     List<String> fetchAll(String serviceName);
 
-//    void subscribe();
+    void subscribe(String service, ChangeListener changeListener);
 
     class StaicRegistryCenter implements RegistryCenter {
 
@@ -52,6 +53,11 @@ public interface RegistryCenter {
         @Override
         public List<String> fetchAll(String serviceName) {
             return providers;
+        }
+
+        @Override
+        public void subscribe(String service, ChangeListener changeListener) {
+
         }
     }
 

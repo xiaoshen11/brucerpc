@@ -4,6 +4,7 @@ import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
+import com.bruce.durpc.core.registry.ZkRegistryCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
@@ -50,7 +51,7 @@ public class ConsumerConfig {
 
     @Bean(initMethod = "start",destroyMethod = "stop")
     public RegistryCenter consumer_rc(){
-        return new RegistryCenter.StaicRegistryCenter(List.of(servers.split(",")));
+        return new ZkRegistryCenter();
     }
 
 }

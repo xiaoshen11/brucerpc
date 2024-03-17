@@ -5,12 +5,13 @@ import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.api.RpcContext;
+import com.bruce.durpc.core.registry.ChangeListener;
+import com.bruce.durpc.core.registry.Event;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @date 2024/3/10
@@ -72,8 +74,19 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
 
     private Object createFromRegistry(Class<?> service, RpcContext context, RegistryCenter rc) {
         String serviceName = service.getCanonicalName();
-        List<String> providers = rc.fetchAll(serviceName);
+        List<String> providers = mapUrl(rc.fetchAll(serviceName));
+        System.out.println("====>  map to provider");
+        providers.forEach(System.out::println);
+
+        rc.subscribe(serviceName, event -> {
+            providers.clear();
+            providers.addAll(mapUrl(event.getData()));
+        });
         return createConsumer(service, context, providers);
+    }
+
+    private List<String> mapUrl(List<String> nodes){
+        return nodes.stream().map(x -> "http://" + x.replace("_",":")).collect(Collectors.toList());
     }
 
     private Object createConsumer(Class<?> service, RpcContext context, List<String> providers) {
