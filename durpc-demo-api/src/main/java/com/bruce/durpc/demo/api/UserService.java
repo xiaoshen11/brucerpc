@@ -30,6 +30,10 @@ public interface UserService {
 
     Integer getIdByList(List<Integer> ids);
 
+    List<User> getListByList(List<User> users);
+
+    User[] getListByList(User[] users);
+
     Map<String,Integer> getIdByMap(Map<String,Integer> map);
 
     long[] getLongIds();

@@ -41,6 +41,16 @@ public class DurpcDemoConsumerApplication {
     @Bean
     public ApplicationRunner consumerRunner(){
         return x -> {
+            User[] users = new User[3];
+            users[0] = new User(1,"bruce");
+            users[1] = new User(2,"bruce1");
+            users[2] = new User(3,"bruce2");
+            System.out.println("getListByList(List<User> users) ====> ");
+            userService.getListByList(Arrays.asList(users)).forEach(u -> System.out.println(u.getId()));
+
+            System.out.println("getListByList(User[] users) ====> ");
+            Arrays.stream(userService.getListByList(users)).forEach(u -> System.out.println(u.getName()));
+
             System.out.println(userService.getIdByList(Arrays.asList(new Integer[]{4,5,6})));
             Map map = new HashMap<String,Integer>();
             map.put("id",6);

@@ -76,6 +76,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getListByList(List<User> users) {
+        return users;
+    }
+
+    @Override
+    public User[] getListByList(User[] users) {
+        return users;
+    }
+
+    @Override
     public Map<String,Integer> getIdByMap(Map<String,Integer> map) {
         return map;
     }

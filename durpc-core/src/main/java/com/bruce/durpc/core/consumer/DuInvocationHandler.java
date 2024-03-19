@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -86,23 +87,34 @@ public class DuInvocationHandler implements InvocationHandler {
                 }
                 return jsonResult.toJavaObject(type);
             }else if(data instanceof JSONArray jsonArray){
-                if(Collection.class.isAssignableFrom(type)){
-                    Object[] array = jsonArray.toArray();
-                    List resultList = new ArrayList<>();
-                    Class<?> componentType = (Class<?>)(((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0]);
+                Object[] array = jsonArray.toArray();
+                if(type.isArray()){
+                    Class<?> componentType = type.getComponentType();
+                    Object resultArray = Array.newInstance(componentType, array.length);
                     for (int i = 0; i < array.length; i++) {
-                        resultList.add(TypeUtils.cast(array[i],componentType));
+                        if (componentType.isPrimitive() || componentType.getPackageName().startsWith("java")) {
+                            Array.set(resultArray, i, array[i]);
+                        } else {
+                            Object castObject = TypeUtils.cast(array[i], componentType);
+                            Array.set(resultArray, i, castObject);
+                        }
+                    }
+                    return resultArray;
+                } else if(List.class.isAssignableFrom(type)){
+                    List resultList = new ArrayList<>();
+                    Type genericReturnType = method.getGenericReturnType();
+                    if(genericReturnType instanceof ParameterizedType parameterizedType){
+                        Type actualType = parameterizedType.getActualTypeArguments()[0];
+                        for (Object o : array) {
+                            resultList.add(TypeUtils.cast(o, (Class<?>) actualType));
+                        }
+                    }else{
+                        resultList.addAll(Arrays.asList(args));
                     }
                     return resultList;
+                }else {
+                    return null;
                 }
-
-                Object[] array = jsonArray.toArray();
-                Class<?> componentType = method.getReturnType().componentType();
-                Object resultArray = Array.newInstance(componentType, array.length);
-                for (int i = 0; i < array.length; i++) {
-                    Array.set(resultArray,i,array[i]);
-                }
-                return resultArray;
             }else{
                 return TypeUtils.cast(data,method.getReturnType());
             }

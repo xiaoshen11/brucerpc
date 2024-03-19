@@ -28,13 +28,22 @@ public class TypeUtils {
             Class<?> componentType = type.getComponentType();
             Object resultArray = Array.newInstance(componentType, length);
             for (int i = 0; i < length; i++) {
-                Array.set(resultArray, i, Array.get(origin, i));
+                if (componentType.isPrimitive() || componentType.getPackageName().startsWith("java")) {
+                    Array.set(resultArray, i, Array.get(origin, i));
+                } else {
+                    Object castObject = cast(Array.get(origin, i), componentType);
+                    Array.set(resultArray, i, castObject);
+                }
             }
             return resultArray;
         }
 
         if(origin instanceof HashMap map){
             JSONObject jsonObject = new JSONObject(map);
+            return jsonObject.toJavaObject(type);
+        }
+
+        if (origin instanceof JSONObject jsonObject) {
             return jsonObject.toJavaObject(type);
         }
 
