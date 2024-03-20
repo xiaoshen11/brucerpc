@@ -1,5 +1,6 @@
 package com.bruce.durpc.core.api;
 
+import com.bruce.durpc.core.meta.InstanceMeta;
 import lombok.Data;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public class RpcContext {
 
     List<Filter> filters; //TODO
 
-    Router router;
+    Router<InstanceMeta> router;
 
-    LoadBalancer loadBalancer;
+    LoadBalancer<InstanceMeta> loadBalancer;
 
 }

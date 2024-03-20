@@ -5,6 +5,7 @@ import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.api.RpcContext;
+import com.bruce.durpc.core.meta.InstanceMeta;
 import lombok.Data;
 import com.bruce.durpc.core.util.MethodUtils;
 import org.springframework.context.ApplicationContext;
@@ -51,6 +52,7 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
                 Object consumer = stub.get(serviceName);
                 if(consumer == null){
                     consumer = createFromRegistry(service, context, rc);
+                    stub.put(serviceName,consumer);
                 }
                 f.setAccessible(true);
                 try {
@@ -65,13 +67,13 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
 
     private Object createFromRegistry(Class<?> service, RpcContext context, RegistryCenter rc) {
         String serviceName = service.getCanonicalName();
-        List<String> providers = mapUrl(rc.fetchAll(serviceName));
+        List<InstanceMeta> providers = rc.fetchAll(serviceName);
         System.out.println("====>  map to provider");
         providers.forEach(System.out::println);
 
         rc.subscribe(serviceName, event -> {
             providers.clear();
-            providers.addAll(mapUrl(event.getData()));
+            providers.addAll(event.getData());
         });
         return createConsumer(service, context, providers);
     }
@@ -80,7 +82,7 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
         return nodes.stream().map(x -> "http://" + x.replace("_",":")).collect(Collectors.toList());
     }
 
-    private Object createConsumer(Class<?> service, RpcContext context, List<String> providers) {
+    private Object createConsumer(Class<?> service, RpcContext context, List<InstanceMeta> providers) {
         return Proxy.newProxyInstance(service.getClassLoader(),new Class[]{service},new DuInvocationHandler(service, context, providers));
     }
 

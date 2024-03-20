@@ -2,6 +2,7 @@ package com.bruce.durpc.core.provider;
 
 import com.bruce.durpc.core.annotation.DuProvider;
 import com.bruce.durpc.core.api.RegistryCenter;
+import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.meta.ProviderMeta;
 import com.bruce.durpc.core.util.MethodUtils;
 import jakarta.annotation.PostConstruct;
@@ -28,7 +29,7 @@ public class ProviderBootstrp implements ApplicationContextAware {
     ApplicationContext applicationContext;
 
     private MultiValueMap<String, ProviderMeta> skeleton = new LinkedMultiValueMap<>();
-    private String instance;
+    private InstanceMeta instanceMeta;
 
     @Value("${server.port}")
     private String port;
@@ -46,7 +47,7 @@ public class ProviderBootstrp implements ApplicationContextAware {
     @SneakyThrows
     public void start(){
         String ip = InetAddress.getLocalHost().getHostAddress();
-        instance = ip + "_" + port;
+        instanceMeta = InstanceMeta.http(ip,Integer.valueOf(port));
         rc.start();
         skeleton.keySet().forEach(this::registerService);
     }
@@ -59,11 +60,11 @@ public class ProviderBootstrp implements ApplicationContextAware {
     }
 
     private void registerService(String service) {
-        rc.register(service,instance);
+        rc.register(service, instanceMeta);
     }
 
     private void unregisterService(String service) {
-        rc.unregister(service,instance);
+        rc.unregister(service, instanceMeta);
     }
 
     private void genInterface(Object x) {
