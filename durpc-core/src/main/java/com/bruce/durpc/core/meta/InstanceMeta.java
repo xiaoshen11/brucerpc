@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 /**
+ * 描述服务实例元数据
+ *
  * @date 2024/3/20
  */
 @Data
@@ -33,11 +35,11 @@ public class InstanceMeta {
         return String.format("%s_%d",host,port);
     }
 
-    public static InstanceMeta http(String host,Integer port){
-        return new InstanceMeta("http",host,port,"");
-    }
-
     public String toUrl() {
         return String.format("%s://%s:%d/%s",scheme,host,port,context);
+    }
+
+    public static InstanceMeta http(String host,Integer port){
+        return new InstanceMeta("http",host,port,"");
     }
 }

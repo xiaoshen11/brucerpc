@@ -1,2 +1,10 @@
 server:
   port: 8081
+durpc:
+  zkServer: localhost:2181
+  zkRoot: durpc
+
+app:
+  id: app1
+  namespace: public
+  env: dev

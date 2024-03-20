@@ -6,8 +6,10 @@ import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.api.RpcContext;
 import com.bruce.durpc.core.meta.InstanceMeta;
+import com.bruce.durpc.core.meta.ServiceMeta;
 import lombok.Data;
 import com.bruce.durpc.core.util.MethodUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
@@ -32,9 +34,18 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
 
     private Map<String,Object> stub = new HashMap<>();
 
+    @Value("${app.id}")
+    private String app;
+
+    @Value("${app.namespace}")
+    private String namespace;
+
+    @Value("${app.env}")
+    private String env;
+
     public void start() {
-        Router router = applicationContext.getBean(Router.class);
-        LoadBalancer loadBalancer = applicationContext.getBean(LoadBalancer.class);
+        Router<InstanceMeta> router = applicationContext.getBean(Router.class);
+        LoadBalancer<InstanceMeta> loadBalancer = applicationContext.getBean(LoadBalancer.class);
         RegistryCenter rc = applicationContext.getBean(RegistryCenter.class);
         RpcContext context = new RpcContext();
         context.setRouter(router);
@@ -66,12 +77,11 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
     }
 
     private Object createFromRegistry(Class<?> service, RpcContext context, RegistryCenter rc) {
-        String serviceName = service.getCanonicalName();
-        List<InstanceMeta> providers = rc.fetchAll(serviceName);
-        System.out.println("====>  map to provider");
+        ServiceMeta serviceMeta = ServiceMeta.builder().app(app).env(env).namespace(namespace).name(service.getCanonicalName()).build();
+        List<InstanceMeta> providers = rc.fetchAll(serviceMeta);
+        System.out.println("====>  map to provider: ");
         providers.forEach(System.out::println);
-
-        rc.subscribe(serviceName, event -> {
+        rc.subscribe(serviceMeta, event -> {
             providers.clear();
             providers.addAll(event.getData());
         });

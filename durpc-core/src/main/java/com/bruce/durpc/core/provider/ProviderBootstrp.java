@@ -4,6 +4,7 @@ import com.bruce.durpc.core.annotation.DuProvider;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.meta.ProviderMeta;
+import com.bruce.durpc.core.meta.ServiceMeta;
 import com.bruce.durpc.core.util.MethodUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -34,6 +35,15 @@ public class ProviderBootstrp implements ApplicationContextAware {
     @Value("${server.port}")
     private String port;
 
+    @Value("${app.id}")
+    private String app;
+
+    @Value("${app.namespace}")
+    private String namespace;
+
+    @Value("${app.env}")
+    private String env;
+
     RegistryCenter rc;
 
     @PostConstruct
@@ -41,7 +51,7 @@ public class ProviderBootstrp implements ApplicationContextAware {
         Map<String,Object> providers = applicationContext.getBeansWithAnnotation(DuProvider.class);
         rc = applicationContext.getBean(RegistryCenter.class);
         providers.forEach((x,y) -> System.out.println(x));
-        providers.values().forEach(x -> genInterface(x));
+        providers.values().forEach(this::genInterface);
     }
 
     @SneakyThrows
@@ -60,33 +70,33 @@ public class ProviderBootstrp implements ApplicationContextAware {
     }
 
     private void registerService(String service) {
-        rc.register(service, instanceMeta);
+        ServiceMeta serviceMeta = ServiceMeta.builder().app(app).env(env).namespace(namespace).name(service).build();
+        rc.register(serviceMeta, instanceMeta);
     }
 
     private void unregisterService(String service) {
-        rc.unregister(service, instanceMeta);
+        ServiceMeta serviceMeta = ServiceMeta.builder().app(app).env(env).namespace(namespace).name(service).build();
+        rc.unregister(serviceMeta, instanceMeta);
     }
 
-    private void genInterface(Object x) {
-        Arrays.stream(x.getClass().getInterfaces()).forEach(
-                itface -> {
-                    Method[] methods = itface.getMethods();
+    private void genInterface(Object impl) {
+        Arrays.stream(impl.getClass().getInterfaces()).forEach(
+                service -> {
+                    Method[] methods = service.getMethods();
                     for (Method method : methods) {
                         if (MethodUtils.checkLocalMethod(method)) {
                             continue;
                         }
-                        createProvider(itface, x, method);
+                        createProvider(service, impl, method);
                     }
                 });
     }
 
-    private void createProvider(Class<?> itface, Object x, Method method) {
-        ProviderMeta meta = new ProviderMeta();
-        meta.setMethod(method);
-        meta.setServiceImpl(x);
-        meta.setMethodSign(MethodUtils.methodSign(method));
+    private void createProvider(Class<?> service, Object impl, Method method) {
+        ProviderMeta meta = ProviderMeta.builder().method(method)
+                .serviceImpl(impl).methodSign(MethodUtils.methodSign(method)).build();
         System.out.println("create a provider: " + meta);
-        skeleton.add(itface.getCanonicalName(),meta);
+        skeleton.add(service.getCanonicalName(),meta);
     }
 
 }

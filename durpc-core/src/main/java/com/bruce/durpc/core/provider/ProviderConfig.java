@@ -1,7 +1,7 @@
 package com.bruce.durpc.core.provider;
 
 import com.bruce.durpc.core.api.RegistryCenter;
-import com.bruce.durpc.core.registry.ZkRegistryCenter;
+import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,7 @@
 package com.bruce.durpc.core.api;
 
 import com.bruce.durpc.core.meta.InstanceMeta;
+import com.bruce.durpc.core.meta.ServiceMeta;
 import com.bruce.durpc.core.registry.ChangeListener;
 
 import java.util.List;
@@ -15,14 +16,14 @@ public interface RegistryCenter {
     void stop(); // provider/consumer
 
     // provider
-    void register(String service, InstanceMeta instanceMeta);
+    void register(ServiceMeta service, InstanceMeta instanceMeta);
 
-    void unregister(String service, InstanceMeta instanceMeta);
+    void unregister(ServiceMeta service, InstanceMeta instanceMeta);
 
     // consumer
-    List<InstanceMeta> fetchAll(String serviceName);
+    List<InstanceMeta> fetchAll(ServiceMeta service);
 
-    void subscribe(String service, ChangeListener changeListener);
+    void subscribe(ServiceMeta service, ChangeListener changeListener);
 
     class StaicRegistryCenter implements RegistryCenter {
 
@@ -43,22 +44,22 @@ public interface RegistryCenter {
         }
 
         @Override
-        public void register(String service, InstanceMeta instanceMeta) {
+        public void register(ServiceMeta service, InstanceMeta instanceMeta) {
 
         }
 
         @Override
-        public void unregister(String service, InstanceMeta instanceMeta) {
+        public void unregister(ServiceMeta service, InstanceMeta instanceMeta) {
 
         }
 
         @Override
-        public List<InstanceMeta> fetchAll(String serviceName) {
+        public List<InstanceMeta> fetchAll(ServiceMeta service) {
             return providers;
         }
 
         @Override
-        public void subscribe(String service, ChangeListener changeListener) {
+        public void subscribe(ServiceMeta service, ChangeListener changeListener) {
 
         }
     }

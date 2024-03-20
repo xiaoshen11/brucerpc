@@ -4,15 +4,14 @@ import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
-import com.bruce.durpc.core.registry.ZkRegistryCenter;
+import com.bruce.durpc.core.meta.InstanceMeta;
+import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-
-import java.util.List;
 
 /**
  * @date 2024/3/7
@@ -40,12 +39,12 @@ public class ConsumerConfig {
     }
 
     @Bean
-    public LoadBalancer loadBalancer(){
+    public LoadBalancer<InstanceMeta> loadBalancer(){
         return new RandomRobinLoadBalancer();
     }
 
     @Bean
-    public Router router(){
+    public Router<InstanceMeta> router(){
         return Router.Default;
     }
 
