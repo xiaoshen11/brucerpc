@@ -1,10 +1,6 @@
 package com.bruce.durpc.core.consumer;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.bruce.durpc.core.api.LoadBalancer;
-import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.api.RpcContext;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
@@ -17,17 +13,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,61 +54,9 @@ public class DuInvocationHandler implements InvocationHandler {
         RpcResponse response = post(request, url);
         if(response.isStatus()){
             Object data = response.getData();
-            Class<?> type = method.getReturnType();
-            if(data instanceof JSONObject jsonResult) {
-                if(Map.class.isAssignableFrom(type)){
-                    Map resultMap = new HashMap();
-                    Type genericReturnType = method.getGenericReturnType();
-                    if(genericReturnType instanceof ParameterizedType parameterizedType){
-                        Class<?> keyType = (Class<?>)parameterizedType.getActualTypeArguments()[0];
-                        Class<?> valueType = (Class<?>)parameterizedType.getActualTypeArguments()[1];
-                        jsonResult.entrySet().stream().forEach(
-                                e -> {
-                                    Object key = TypeUtils.cast(e.getKey(),keyType);
-                                    Object value = TypeUtils.cast(e.getValue(),valueType);
-                                    resultMap.putIfAbsent(key,value);
-                                }
-                        );
-
-                    }
-                    return resultMap;
-                }
-                return jsonResult.toJavaObject(type);
-            }else if(data instanceof JSONArray jsonArray){
-                Object[] array = jsonArray.toArray();
-                if(type.isArray()){
-                    Class<?> componentType = type.getComponentType();
-                    Object resultArray = Array.newInstance(componentType, array.length);
-                    for (int i = 0; i < array.length; i++) {
-                        if (componentType.isPrimitive() || componentType.getPackageName().startsWith("java")) {
-                            Array.set(resultArray, i, array[i]);
-                        } else {
-                            Object castObject = TypeUtils.cast(array[i], componentType);
-                            Array.set(resultArray, i, castObject);
-                        }
-                    }
-                    return resultArray;
-                } else if(List.class.isAssignableFrom(type)){
-                    List resultList = new ArrayList<>();
-                    Type genericReturnType = method.getGenericReturnType();
-                    if(genericReturnType instanceof ParameterizedType parameterizedType){
-                        Type actualType = parameterizedType.getActualTypeArguments()[0];
-                        for (Object o : array) {
-                            resultList.add(TypeUtils.cast(o, (Class<?>) actualType));
-                        }
-                    }else{
-                        resultList.addAll(Arrays.asList(args));
-                    }
-                    return resultList;
-                }else {
-                    return null;
-                }
-            }else{
-                return TypeUtils.cast(data,method.getReturnType());
-            }
+            return TypeUtils.castMethodResult(method, args, data);
         }else {
             Exception ex = response.getEx();
-//            ex.printStackTrace();
             throw new RuntimeException(ex);
         }
     }
