@@ -94,40 +94,4 @@ public class ProviderBootstrp implements ApplicationContextAware {
         skeleton.add(itface.getCanonicalName(),meta);
     }
 
-    public RpcResponse invoke(RpcRequest request) {
-        RpcResponse rpcResponse = new RpcResponse();
-        List<ProviderMeta> providerMetaList = skeleton.get(request.getService());
-        try {
-            ProviderMeta providerMeta = findProviderMeta(providerMetaList,request.getMethodSign());
-            if(providerMeta != null){
-                Method method = providerMeta.getMethod();
-                Object[] args = processArgs(request.getArgs(),method.getParameterTypes());
-                Object result = method.invoke(providerMeta.getServiceImpl(),args);
-                rpcResponse.setStatus(true);
-                rpcResponse.setData(result);
-            }
-        } catch (InvocationTargetException e) {
-            rpcResponse.setEx(new RuntimeException(e.getTargetException().getMessage()));
-        } catch (IllegalAccessException e) {
-            rpcResponse.setEx(new RuntimeException(e.getMessage()));
-        }
-        return rpcResponse;
-    }
-
-    private Object[] processArgs(Object[] args, Class<?>[] parameterTypes) {
-        if(args == null || args.length == 0){
-            return args;
-        }
-        Object[] actualArgs = new Object[args.length];
-        for (int i = 0; i < actualArgs.length; i++) {
-            actualArgs[i] = TypeUtils.cast(args[i],parameterTypes[i]);
-        }
-        return actualArgs;
-    }
-
-    private ProviderMeta findProviderMeta(List<ProviderMeta> providerMetaList, String methodSign) {
-        Optional<ProviderMeta> optional = providerMetaList.stream().filter(x -> x.getMethodSign().equals(methodSign)).findFirst();
-        return optional.orElse(null);
-    }
-
 }

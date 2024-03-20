@@ -68,7 +68,7 @@ public class ZkRegistryCenter implements RegistryCenter {
             }
             //
             String instancePath = servicePath + "/" + instance;
-            client.delete().quietly().forPath(instancePath);
+            client.delete().forPath(instancePath);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

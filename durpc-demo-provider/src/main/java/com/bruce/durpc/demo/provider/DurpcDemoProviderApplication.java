@@ -5,6 +5,7 @@ import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.provider.ProviderBootstrp;
 import com.bruce.durpc.core.provider.ProviderConfig;
+import com.bruce.durpc.core.provider.ProviderInvoker;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -35,31 +36,31 @@ public class DurpcDemoProviderApplication {
 	// 使用http + json来实现序列化
 
 	@Autowired
-	ProviderBootstrp providerBootstrp;
+	ProviderInvoker providerInvoker;
 
 	@RequestMapping("/")
 	public RpcResponse invoke(@RequestBody RpcRequest request){
-		return providerBootstrp.invoke(request);
+		return providerInvoker.invoke(request);
 	}
 
 	@Bean
 	ApplicationRunner getRunner(){
 		return x -> {
-//			RpcRequest request = new RpcRequest();
-//			request.setService("com.bruce.durpc.demo.api.UserService");
-//			request.setMethodSign("findById@1_int");
-//			request.setArgs(new Object[]{10});
-//
-//			RpcResponse rpcResponse = invoke(request);
-//			System.out.println("return : " + rpcResponse.getData());
-//
-//			RpcRequest request2 = new RpcRequest();
-//			request2.setService("com.bruce.durpc.demo.api.UserService");
-//			request2.setMethodSign("findById@2_int_java.lang.String");
-//			request2.setArgs(new Object[]{12,"bruce"});
-//
-//			RpcResponse rpcResponse2 = invoke(request2);
-//			System.out.println("return : " + rpcResponse2.getData());
+			RpcRequest request = new RpcRequest();
+			request.setService("com.bruce.durpc.demo.api.UserService");
+			request.setMethodSign("findById@1_int");
+			request.setArgs(new Object[]{10});
+
+			RpcResponse rpcResponse = invoke(request);
+			System.out.println("return : " + rpcResponse.getData());
+
+			RpcRequest request2 = new RpcRequest();
+			request2.setService("com.bruce.durpc.demo.api.UserService");
+			request2.setMethodSign("findById@2_int_java.lang.String");
+			request2.setArgs(new Object[]{12,"bruce"});
+
+			RpcResponse rpcResponse2 = invoke(request2);
+			System.out.println("return : " + rpcResponse2.getData());
 		};
 	}
 
