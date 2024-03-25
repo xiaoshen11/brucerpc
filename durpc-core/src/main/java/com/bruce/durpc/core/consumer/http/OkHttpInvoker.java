@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.consumer.HttpInvoker;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @date 2024/3/20
  */
+@Slf4j
 public class OkHttpInvoker implements HttpInvoker {
 
     OkHttpClient client;
@@ -33,7 +35,7 @@ public class OkHttpInvoker implements HttpInvoker {
 
     public RpcResponse post(RpcRequest rpcRequest, String url){
         String reqJson = JSON.toJSONString(rpcRequest);
-        System.out.println("reqJson ====== " + reqJson);
+        log.debug("reqJson ====== " + reqJson);
         Request request = new Request.Builder()
                 .url(url)
                 .post(RequestBody.create(reqJson,JSONTYPE))
@@ -41,7 +43,7 @@ public class OkHttpInvoker implements HttpInvoker {
         String respJson = null;
         try {
             respJson = client.newCall(request).execute().body().string();
-            System.out.println("respJson ====== " + respJson);
+            log.debug("respJson ====== " + respJson);
             RpcResponse response = JSON.parseObject(respJson,RpcResponse.class);
             return response;
         } catch (IOException e) {

@@ -1,6 +1,6 @@
 package com.bruce.durpc.core.util;
 
-import com.bruce.durpc.core.annotation.DuConsumer;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * @date 2024/3/11
  */
+@Slf4j
 public class MethodUtils {
 
     public static boolean checkLocalMethod(final String method) {
@@ -42,7 +43,7 @@ public class MethodUtils {
 
     public static void main(String[] args) {
         Arrays.stream(MethodUtils.class.getMethods()).forEach(
-                m -> System.out.println(MethodUtils.methodSign(m))
+                m -> log.debug(MethodUtils.methodSign(m))
         );
     }
 

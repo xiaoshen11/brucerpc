@@ -8,3 +8,8 @@ app:
   id: app1
   namespace: public
   env: dev
+
+logging:
+  level:
+    root: error
+    com.bruce.durpc: info

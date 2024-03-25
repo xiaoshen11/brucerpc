@@ -6,6 +6,7 @@ import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
@@ -17,6 +18,7 @@ import org.springframework.core.annotation.Order;
  * @date 2024/3/7
  */
 @Configuration
+@Slf4j
 public class ConsumerConfig {
 
     @Value("${durpc.providers}")
@@ -31,9 +33,9 @@ public class ConsumerConfig {
     @Order(Integer.MIN_VALUE)
     public ApplicationRunner consumerBootstrap_runner(@Autowired ConsumerBootstrap consumerBootstrap){
         return x ->{
-            System.out.println("consumerBootstrap_runner ===== start");
+            log.info("consumerBootstrap_runner ===== start");
             consumerBootstrap.start();
-            System.out.println("consumerBootstrap_runner ===== end");
+            log.info("consumerBootstrap_runner ===== end");
 
         };
     }

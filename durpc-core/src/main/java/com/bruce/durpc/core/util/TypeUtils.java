@@ -2,6 +2,7 @@ package com.bruce.durpc.core.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -14,8 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 类型转换工具类
  * @date 2024/3/15
  */
+@Slf4j
 public class TypeUtils {
 
     public static Object cast(Object origin,Class<?> type){
@@ -78,10 +81,12 @@ public class TypeUtils {
 
     public static Object castMethodResult(Method method, Object[] args, Object data) {
         Class<?> type = method.getReturnType();
+        log.debug("method.getReturnType() = " + type);
         if(data instanceof JSONObject jsonResult) {
             if(Map.class.isAssignableFrom(type)){
                 Map resultMap = new HashMap();
                 Type genericReturnType = method.getGenericReturnType();
+                log.debug(genericReturnType.toString());
                 if(genericReturnType instanceof ParameterizedType parameterizedType){
                     Class<?> keyType = (Class<?>)parameterizedType.getActualTypeArguments()[0];
                     Class<?> valueType = (Class<?>)parameterizedType.getActualTypeArguments()[1];
@@ -116,6 +121,7 @@ public class TypeUtils {
                 Type genericReturnType = method.getGenericReturnType();
                 if(genericReturnType instanceof ParameterizedType parameterizedType){
                     Type actualType = parameterizedType.getActualTypeArguments()[0];
+                    log.debug(actualType.toString());
                     for (Object o : array) {
                         resultList.add(TypeUtils.cast(o, (Class<?>) actualType));
                     }

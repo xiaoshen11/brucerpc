@@ -2,6 +2,7 @@ package com.bruce.durpc.core.provider;
 
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.core.annotation.Order;
  * @date 2024/3/7
  */
 @Configuration
+@Slf4j
 public class ProviderConfig {
 
     @Bean
@@ -34,9 +36,9 @@ public class ProviderConfig {
     @Order(Integer.MIN_VALUE)
     public ApplicationRunner providerBootstrap_runner(@Autowired ProviderBootstrp providerBootstrp){
         return x ->{
-            System.out.println("providerBootstrap_runner ===== start");
+            log.info("providerBootstrap_runner ===== start");
             providerBootstrp.start();
-            System.out.println("providerBootstrap_runner ===== end");
+            log.info("providerBootstrap_runner ===== end");
         };
     }
 }

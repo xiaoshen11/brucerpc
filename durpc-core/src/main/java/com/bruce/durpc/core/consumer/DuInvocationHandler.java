@@ -7,6 +7,7 @@ import com.bruce.durpc.core.consumer.http.OkHttpInvoker;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.util.MethodUtils;
 import com.bruce.durpc.core.util.TypeUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -17,6 +18,7 @@ import java.util.List;
  *
  * @date 2024/3/10
  */
+@Slf4j
 public class DuInvocationHandler implements InvocationHandler {
 
     Class<?> service;
@@ -45,7 +47,7 @@ public class DuInvocationHandler implements InvocationHandler {
 
         List<InstanceMeta> instances = context.getRouter().route(this.providers);
         InstanceMeta instance = context.getLoadBalancer().choose(instances);
-        System.out.println("loadBalancer.choose(instances) ======= " + instance);
+        log.debug("loadBalancer.choose(instances) ======= " + instance);
 
         RpcResponse response = httpInvoker.post(request, instance.toUrl());
         if(response.isStatus()){

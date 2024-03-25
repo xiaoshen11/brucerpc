@@ -9,6 +9,7 @@ import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.meta.ServiceMeta;
 import lombok.Data;
 import com.bruce.durpc.core.util.MethodUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @date 2024/3/10
  */
 @Data
+@Slf4j
 public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAware {
 
     ApplicationContext applicationContext;
@@ -57,7 +59,7 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
             List<Field> fields = MethodUtils.findAnnotatedField(bean.getClass(), DuConsumer.class);
 
             fields.stream().forEach(f -> {
-                System.out.println("=====" + f.getType());
+                log.info("=====" + f.getType());
                 Class<?> service = f.getType();
                 String serviceName = service.getCanonicalName();
                 Object consumer = stub.get(serviceName);
@@ -79,7 +81,7 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
     private Object createFromRegistry(Class<?> service, RpcContext context, RegistryCenter rc) {
         ServiceMeta serviceMeta = ServiceMeta.builder().app(app).env(env).namespace(namespace).name(service.getCanonicalName()).build();
         List<InstanceMeta> providers = rc.fetchAll(serviceMeta);
-        System.out.println("====>  map to provider: ");
+        log.info("====>  map to provider: ");
         providers.forEach(System.out::println);
         rc.subscribe(serviceMeta, event -> {
             providers.clear();
