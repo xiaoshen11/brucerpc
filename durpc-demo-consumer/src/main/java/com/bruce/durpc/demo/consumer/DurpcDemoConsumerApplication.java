@@ -41,7 +41,7 @@ public class DurpcDemoConsumerApplication {
     @Bean
     public ApplicationRunner consumerRunner(){
         return x -> {
-//            testAll();
+            testAll();
         };
     }
 

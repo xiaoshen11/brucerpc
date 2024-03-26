@@ -92,12 +92,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(long id) {
-        return new User(Long.valueOf(id).intValue(), "KK");
+        return new User(Long.valueOf(id).intValue(), "Du");
     }
 
     @Override
     public User ex(boolean flag) {
         if(flag) throw new RuntimeException("just throw an exception");
-        return new User(100, "KK100");
+        return new User(100, "Du100");
     }
 }
