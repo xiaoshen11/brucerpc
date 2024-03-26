@@ -1,5 +1,5 @@
 ### 获取8089用户信息
-GET http://localhost:8089/?id=11
+GET http://localhost:8089/?id=66
 Content-Type: application/json
 
 

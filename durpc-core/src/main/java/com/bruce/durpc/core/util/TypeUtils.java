@@ -79,7 +79,7 @@ public class TypeUtils {
         return null;
     }
 
-    public static Object castMethodResult(Method method, Object[] args, Object data) {
+    public static Object castMethodResult(Method method, Object data) {
         Class<?> type = method.getReturnType();
         log.debug("method.getReturnType() = " + type);
         if(data instanceof JSONObject jsonResult) {
@@ -126,7 +126,7 @@ public class TypeUtils {
                         resultList.add(TypeUtils.cast(o, (Class<?>) actualType));
                     }
                 }else{
-                    resultList.addAll(Arrays.asList(args));
+                    resultList.addAll(Arrays.asList(array));
                 }
                 return resultList;
             }else {

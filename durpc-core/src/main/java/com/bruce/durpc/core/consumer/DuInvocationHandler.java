@@ -1,5 +1,6 @@
 package com.bruce.durpc.core.consumer;
 
+import com.bruce.durpc.core.api.Filter;
 import com.bruce.durpc.core.api.RpcContext;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
@@ -8,6 +9,7 @@ import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.util.MethodUtils;
 import com.bruce.durpc.core.util.TypeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -45,14 +47,33 @@ public class DuInvocationHandler implements InvocationHandler {
         request.setMethodSign(MethodUtils.methodSign(method));
         request.setArgs(args);
 
+        List<Filter> filters = context.getFilters();
+        for (Filter filter : filters) {
+            Object result = filter.preFilter(request);
+            if(result != null){
+                log.info(filter.getClass().getName() + " preFilter: " + result);
+                return result;
+            }
+        }
+
         List<InstanceMeta> instances = context.getRouter().route(this.providers);
         InstanceMeta instance = context.getLoadBalancer().choose(instances);
         log.debug("loadBalancer.choose(instances) ======= " + instance);
 
         RpcResponse response = httpInvoker.post(request, instance.toUrl());
+        Object result = castResponseToResult(method, response);
+        for (Filter filter : filters) {
+            result = filter.postFilter(request,response,result);
+        }
+
+        return result;
+    }
+
+    @Nullable
+    private static Object castResponseToResult(Method method, RpcResponse response) {
         if(response.isStatus()){
             Object data = response.getData();
-            return TypeUtils.castMethodResult(method, args, data);
+            return TypeUtils.castMethodResult(method, data);
         }else {
             Exception ex = response.getEx();
             throw new RuntimeException(ex);

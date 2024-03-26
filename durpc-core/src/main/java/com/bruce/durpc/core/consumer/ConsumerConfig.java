@@ -1,9 +1,11 @@
 package com.bruce.durpc.core.consumer;
 
+import com.bruce.durpc.core.api.Filter;
 import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
+import com.bruce.durpc.core.filter.CacheFilter;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
 import lombok.extern.slf4j.Slf4j;
@@ -54,5 +56,11 @@ public class ConsumerConfig {
     public RegistryCenter consumer_rc(){
         return new ZkRegistryCenter();
     }
+
+    @Bean
+    public Filter filter(){
+        return new CacheFilter();
+    }
+
 
 }

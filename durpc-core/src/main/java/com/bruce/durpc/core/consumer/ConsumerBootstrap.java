@@ -1,6 +1,7 @@
 package com.bruce.durpc.core.consumer;
 
 import com.bruce.durpc.core.annotation.DuConsumer;
+import com.bruce.durpc.core.api.Filter;
 import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
@@ -49,9 +50,13 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
         Router<InstanceMeta> router = applicationContext.getBean(Router.class);
         LoadBalancer<InstanceMeta> loadBalancer = applicationContext.getBean(LoadBalancer.class);
         RegistryCenter rc = applicationContext.getBean(RegistryCenter.class);
+
+        List<Filter> filters = applicationContext.getBeansOfType(Filter.class).values().stream().toList();
+
         RpcContext context = new RpcContext();
         context.setRouter(router);
         context.setLoadBalancer(loadBalancer);
+        context.setFilters(filters);
 
         String[] names = applicationContext.getBeanDefinitionNames();
         for (String name : names) {

@@ -26,18 +26,18 @@ public interface UserService {
 
     int[] getIds(int[] ids);
 
-    List<Integer> getIdList(List<Integer> ids);
-
-    Integer getIdByList(List<Integer> ids);
-
-    List<User> getListByList(List<User> users);
-
-    User[] getListByList(User[] users);
-
-    Map<String,Integer> getIdByMap(Map<String,Integer> map);
-
     long[] getLongIds();
 
-    boolean getBoolean(boolean b);
+    User[] findUsers(User[] users);
+
+    List<User> getList(List<User> userList);
+
+    Map<String, User> getMap(Map<String, User> userMap);
+
+    Boolean getFlag(boolean flag);
+
+    User findById(long id);
+
+    User ex(boolean flag);
 
 }

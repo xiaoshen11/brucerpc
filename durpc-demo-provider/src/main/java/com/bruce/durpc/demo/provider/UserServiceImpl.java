@@ -66,37 +66,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Integer> getIdList(List<Integer> ids) {
-        return ids;
-    }
-
-    @Override
-    public Integer getIdByList(List<Integer> ids) {
-        return ids.get(0);
-    }
-
-    @Override
-    public List<User> getListByList(List<User> users) {
-        return users;
-    }
-
-    @Override
-    public User[] getListByList(User[] users) {
-        return users;
-    }
-
-    @Override
-    public Map<String,Integer> getIdByMap(Map<String,Integer> map) {
-        return map;
-    }
-
-    @Override
     public long[] getLongIds() {
         return new long[]{1,2,3};
     }
 
     @Override
-    public boolean getBoolean(boolean b) {
-        return false;
+    public User[] findUsers(User[] users) {
+        return users;
+    }
+
+    @Override
+    public List<User> getList(List<User> userList) {
+        return userList;
+    }
+
+    @Override
+    public Map<String, User> getMap(Map<String, User> userMap) {
+        return userMap;
+    }
+
+    @Override
+    public Boolean getFlag(boolean flag) {
+        return !flag;
+    }
+
+    @Override
+    public User findById(long id) {
+        return new User(Long.valueOf(id).intValue(), "KK");
+    }
+
+    @Override
+    public User ex(boolean flag) {
+        if(flag) throw new RuntimeException("just throw an exception");
+        return new User(100, "KK100");
     }
 }
