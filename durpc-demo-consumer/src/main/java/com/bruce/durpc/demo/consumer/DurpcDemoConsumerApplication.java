@@ -2,7 +2,6 @@ package com.bruce.durpc.demo.consumer;
 
 import com.bruce.durpc.core.annotation.DuConsumer;
 import com.bruce.durpc.core.consumer.ConsumerConfig;
-import com.bruce.durpc.demo.api.OrderService;
 import com.bruce.durpc.demo.api.User;
 import com.bruce.durpc.demo.api.UserService;
 import org.springframework.boot.ApplicationRunner;
@@ -26,8 +25,8 @@ public class DurpcDemoConsumerApplication {
     @DuConsumer
     UserService userService;
 
-    @DuConsumer
-    OrderService orderService;
+//    @DuConsumer
+//    OrderService orderService;
 
     public static void main(String[] args) {
         SpringApplication.run(DurpcDemoConsumerApplication.class, args);

@@ -1,5 +1,6 @@
 package com.bruce.durpc.demo.consumer;
 
+import com.bruce.durpc.core.test.TestZKServer;
 import com.bruce.durpc.demo.provider.DurpcDemoProviderApplication;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,10 +14,19 @@ class DurpcDemoConsumerApplicationTests {
 
     static ApplicationContext context;
 
+    static TestZKServer zkServer = new TestZKServer();
+
     @BeforeAll
     static void init(){
+        System.out.println("======================== ");
+        System.out.println("======================== ");
+        System.out.println("======================== ");
+
+        zkServer.start();
+
         context = SpringApplication.run(DurpcDemoProviderApplication.class,
-                "--server.port=8094","--logging.level.com.bruce.durpc=info");
+                "--server.port=8094", "--durpc.zkServer=localhost:2182",
+                "--logging.level.com.bruce.durpc=info");
     }
     
     @Test
@@ -29,6 +39,7 @@ class DurpcDemoConsumerApplicationTests {
     @AfterAll
     static void destroy(){
         SpringApplication.exit(context, () -> 1);
+        zkServer.stop();
     }
     
 }
