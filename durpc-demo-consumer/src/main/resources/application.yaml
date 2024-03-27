@@ -12,4 +12,4 @@ app:
 logging:
   level:
     root: error
-    com.bruce.durpc: info
+    com.bruce.durpc: debug

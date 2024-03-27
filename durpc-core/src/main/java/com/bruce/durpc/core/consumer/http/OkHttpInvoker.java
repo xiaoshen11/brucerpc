@@ -1,6 +1,7 @@
 package com.bruce.durpc.core.consumer.http;
 
 import com.alibaba.fastjson.JSON;
+import com.bruce.durpc.core.api.DurpcException;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.consumer.HttpInvoker;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * OKHttp client
+ *
  * @date 2024/3/20
  */
 @Slf4j
@@ -47,7 +50,7 @@ public class OkHttpInvoker implements HttpInvoker {
             RpcResponse response = JSON.parseObject(respJson,RpcResponse.class);
             return response;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new DurpcException(e,DurpcException.UnknownEx);
         }
     }
 }

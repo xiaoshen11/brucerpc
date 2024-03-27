@@ -1,5 +1,6 @@
 package com.bruce.durpc.core.registry.zk;
 
+import com.bruce.durpc.core.api.DurpcException;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.meta.ServiceMeta;
@@ -64,7 +65,7 @@ public class ZkRegistryCenter implements RegistryCenter {
             log.info("======> register to zk: " + instancePath);
             client.create().withMode(CreateMode.EPHEMERAL).forPath(instancePath,"provider".getBytes());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DurpcException(e,DurpcException.ZkEx);
         }
     }
 
@@ -81,7 +82,7 @@ public class ZkRegistryCenter implements RegistryCenter {
             log.info("======> unregister from zk: " + instancePath);
             client.delete().quietly().forPath(instancePath);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DurpcException(e,DurpcException.ZkEx);
         }
     }
 
@@ -94,7 +95,7 @@ public class ZkRegistryCenter implements RegistryCenter {
             nodes.forEach(System.out::println);
             return mapInstances(nodes);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DurpcException(e,DurpcException.ZkEx);
         }
     }
 
