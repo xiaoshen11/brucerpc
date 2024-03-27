@@ -8,31 +8,31 @@ import lombok.Data;
  * @date 2024/3/27
  */
 @Data
-public class DurpcException extends RuntimeException {
+public class RpcException extends RuntimeException {
 
     private String errcode;
 
-    public DurpcException() {
+    public RpcException() {
     }
 
-    public DurpcException(String message) {
+    public RpcException(String message) {
         super(message);
     }
 
-    public DurpcException(String message, Throwable cause) {
+    public RpcException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DurpcException(Throwable cause) {
+    public RpcException(Throwable cause) {
         super(cause);
     }
 
-    public DurpcException(Throwable cause, String errcode) {
+    public RpcException(Throwable cause, String errcode) {
         super(cause);
         this.errcode = errcode;
     }
 
-    public DurpcException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public RpcException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 

@@ -1,6 +1,6 @@
 package com.bruce.durpc.core.consumer;
 
-import com.bruce.durpc.core.api.DurpcException;
+import com.bruce.durpc.core.api.RpcException;
 import com.bruce.durpc.core.api.Filter;
 import com.bruce.durpc.core.api.RpcContext;
 import com.bruce.durpc.core.api.RpcRequest;
@@ -76,7 +76,7 @@ public class DuInvocationHandler implements InvocationHandler {
             return TypeUtils.castMethodResult(method, response.getData());
         }else {
             Exception exception = response.getEx();
-            if(exception instanceof DurpcException ex){
+            if(exception instanceof RpcException ex){
                 throw ex;
             }
             throw new RuntimeException(exception);

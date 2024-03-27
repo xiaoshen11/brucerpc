@@ -1,6 +1,6 @@
 package com.bruce.durpc.core.provider;
 
-import com.bruce.durpc.core.api.DurpcException;
+import com.bruce.durpc.core.api.RpcException;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.meta.ProviderMeta;
@@ -40,9 +40,9 @@ public class ProviderInvoker {
                 return rpcResponse;
             }
         } catch (InvocationTargetException e) {
-            rpcResponse.setEx(new DurpcException(e.getTargetException().getMessage()));
+            rpcResponse.setEx(new RpcException(e.getTargetException().getMessage()));
         } catch (IllegalAccessException e) {
-            rpcResponse.setEx(new DurpcException(e.getMessage()));
+            rpcResponse.setEx(new RpcException(e.getMessage()));
         }
         return rpcResponse;
     }
