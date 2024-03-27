@@ -27,12 +27,12 @@ public class OkHttpInvoker implements HttpInvoker {
 
     final static MediaType JSONTYPE = MediaType.get("application/json; charset=utf-8");
 
-    public OkHttpInvoker() {
+    public OkHttpInvoker(int timeout) {
         this.client = new OkHttpClient.Builder()
                 .connectionPool(new ConnectionPool(16,60, TimeUnit.SECONDS))
-                .readTimeout(2,TimeUnit.SECONDS)
-                .writeTimeout(2,TimeUnit.SECONDS)
-                .connectTimeout(2,TimeUnit.SECONDS)
+                .readTimeout(timeout,TimeUnit.MILLISECONDS)
+                .writeTimeout(timeout,TimeUnit.MILLISECONDS)
+                .connectTimeout(timeout,TimeUnit.MILLISECONDS)
                 .build();
     }
 
