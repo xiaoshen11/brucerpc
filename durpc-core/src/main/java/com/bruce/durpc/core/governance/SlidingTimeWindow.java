@@ -1,6 +1,7 @@
 package com.bruce.durpc.core.governance;
 
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * SlidingTimeWindow implement based on RingBuffer and TS(timestamp).
@@ -9,6 +10,7 @@ import lombok.ToString;
  * @create 2024-03-29
  */
 @ToString
+@Slf4j
 public class SlidingTimeWindow {
 
     public static final int DEFAULT_SIZE = 30;
@@ -47,27 +49,27 @@ public class SlidingTimeWindow {
             initRing(ts);
         } else {   // TODO  Prev 是否需要考虑
             if(ts == _curr_ts) {
-                System.out.println("window ts:" + ts + ", curr_ts:" + _curr_ts + ", size:" + size);
+                log.debug("window ts:" + ts + ", curr_ts:" + _curr_ts + ", size:" + size);
                 this.ringBuffer.incr(_curr_mark, 1);
             } else if(ts > _curr_ts && ts < _curr_ts + size) {
                 int offset = (int)(ts - _curr_ts);
-                System.out.println("window ts:" + ts + ", curr_ts:" + _curr_ts + ", size:" + size + ", offset:" + offset);
+                log.debug("window ts:" + ts + ", curr_ts:" + _curr_ts + ", size:" + size + ", offset:" + offset);
                 this.ringBuffer.reset(_curr_mark + 1, offset);
                 this.ringBuffer.incr(_curr_mark + offset, 1);
                 _curr_ts = ts;
                 _curr_mark = (_curr_mark + offset) % size;
             } else if(ts >= _curr_ts + size) {
-                System.out.println("window ts:" + ts + ", curr_ts:" + _curr_ts + ", size:" + size);
+                log.debug("window ts:" + ts + ", curr_ts:" + _curr_ts + ", size:" + size);
                 this.ringBuffer.reset();
                 initRing(ts);
             }
         }
         this.sum = this.ringBuffer.sum();
-        System.out.println("window after: " + this.toString());
+        log.debug("window after: " + this.toString());
     }
 
     private void initRing(long ts) {
-        System.out.println("window initRing ts:" + ts);
+        log.debug("window initRing ts:" + ts);
         this._start_ts  = ts;
         this._curr_ts   = ts;
         this._curr_mark = 0;

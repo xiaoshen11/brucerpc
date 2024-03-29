@@ -119,11 +119,13 @@ public class DuInvocationHandler implements InvocationHandler {
                         window = new SlidingTimeWindow();
                         windows.put(url,window);
                     }
-                    window.record(System.currentTimeMillis());
-                    log.debug("instance {} in window with {}", url, window.getSum());
-                    // 发生了10次就做故障隔离
-                    if(window.getSum() >= 10){
-                        isolate(instance);
+                    synchronized (window) {
+                        window.record(System.currentTimeMillis());
+                        log.debug("instance {} in window with {}", url, window.getSum());
+                        // 发生了10次就做故障隔离
+                        if (window.getSum() >= 10) {
+                            isolate(instance);
+                        }
                     }
 
                     throw e;
