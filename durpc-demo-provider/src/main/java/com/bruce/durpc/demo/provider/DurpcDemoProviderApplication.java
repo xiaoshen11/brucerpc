@@ -1,27 +1,20 @@
 package com.bruce.durpc.demo.provider;
 
-import com.bruce.durpc.core.annotation.DuProvider;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
-import com.bruce.durpc.core.provider.ProviderBootstrp;
 import com.bruce.durpc.core.provider.ProviderConfig;
 import com.bruce.durpc.core.provider.ProviderInvoker;
-import jakarta.annotation.PostConstruct;
+import com.bruce.durpc.demo.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootApplication
 @RestController
@@ -38,9 +31,21 @@ public class DurpcDemoProviderApplication {
 	@Autowired
 	ProviderInvoker providerInvoker;
 
+	@Autowired
+	UserService userService;
+
 	@RequestMapping("/")
 	public RpcResponse invoke(@RequestBody RpcRequest request){
 		return providerInvoker.invoke(request);
+	}
+
+	@RequestMapping("/ports")
+	public RpcResponse<String> ports(@RequestParam("ports") String ports){
+		userService.setTimeoutPorts(ports);
+		RpcResponse<String> response = new RpcResponse<>();
+		response.setStatus(true);
+		response.setData("OK:" + ports);
+		return response;
 	}
 
 	@Bean

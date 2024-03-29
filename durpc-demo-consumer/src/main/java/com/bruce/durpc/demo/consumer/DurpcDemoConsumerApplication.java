@@ -46,12 +46,7 @@ public class DurpcDemoConsumerApplication {
     @Bean
     public ApplicationRunner consumerRunner(){
         return x -> {
-            long start = System.currentTimeMillis();
-            System.out.println("Case 18. >>===[]===");
-            userService.find(100);
-            System.out.println("userService.find() take " + (System.currentTimeMillis() - start));
-
-//            testAll();
+            testAll();
         };
     }
 
@@ -145,5 +140,10 @@ public class DurpcDemoConsumerApplication {
         } catch (RuntimeException e) {
             System.out.println(" ===> exception: " + e.getMessage());
         }
+
+        System.out.println("Case 18. >>===[测试超时异常]===");
+        long start = System.currentTimeMillis();
+        userService.find(100);
+        System.out.println("userService.find() take " + (System.currentTimeMillis() - start));
     }
 }
