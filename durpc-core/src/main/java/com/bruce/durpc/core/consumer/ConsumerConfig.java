@@ -1,13 +1,16 @@
 package com.bruce.durpc.core.consumer;
 
+import com.bruce.durpc.core.api.Filter;
 import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
+import com.bruce.durpc.core.cluster.GrayRouter;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,9 @@ import org.springframework.core.annotation.Order;
 @Configuration
 @Slf4j
 public class ConsumerConfig {
+
+    @Value("${app.grayRatio}")
+    private int grayRatio;
 
     @Bean
     ConsumerBootstrap consumerBootstrap(){
@@ -43,12 +49,17 @@ public class ConsumerConfig {
 
     @Bean
     public Router<InstanceMeta> router(){
-        return Router.Default;
+        return new GrayRouter(grayRatio);
     }
 
     @Bean(initMethod = "start",destroyMethod = "stop")
     public RegistryCenter consumer_rc(){
         return new ZkRegistryCenter();
+    }
+
+    @Bean
+    public Filter filter2(){
+        return Filter.Default;
     }
 
 //    @Bean

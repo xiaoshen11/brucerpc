@@ -52,6 +52,9 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
     @Value("${app.timeout}")
     private int timeout;
 
+    @Value("${app.grayRatio}")
+    private int grayRatio;
+
     public void start() {
         Router<InstanceMeta> router = applicationContext.getBean(Router.class);
         LoadBalancer<InstanceMeta> loadBalancer = applicationContext.getBean(LoadBalancer.class);
@@ -65,6 +68,7 @@ public class ConsumerBootstrap implements ApplicationContextAware, EnvironmentAw
         context.setFilters(filters);
         context.getParameters().put("app.retries",retries + "");
         context.getParameters().put("app.timeout",timeout + "");
+        context.getParameters().put("app.grayRatio",grayRatio + "");
 
         String[] names = applicationContext.getBeanDefinitionNames();
         for (String name : names) {

@@ -46,6 +46,9 @@ public class ProviderBootstrp implements ApplicationContextAware {
     @Value("${app.env}")
     private String env;
 
+    @Value("#{${app.metas}}")
+    private Map<String,String> metas;
+
     RegistryCenter rc;
 
     @PostConstruct
@@ -60,6 +63,7 @@ public class ProviderBootstrp implements ApplicationContextAware {
     public void start(){
         String ip = InetAddress.getLocalHost().getHostAddress();
         instanceMeta = InstanceMeta.http(ip,Integer.valueOf(port));
+        instanceMeta.getParameters().putAll(this.metas);
         rc.start();
         skeleton.keySet().forEach(this::registerService);
     }

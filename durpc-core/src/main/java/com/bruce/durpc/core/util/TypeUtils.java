@@ -136,4 +136,9 @@ public class TypeUtils {
             return TypeUtils.cast(data, method.getReturnType());
         }
     }
+
+    public static Object castGenericType(Object arg, Class<?> parameterType, Type[] genericParameterType) {
+
+        return cast(arg,parameterType);
+    }
 }

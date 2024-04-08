@@ -76,7 +76,7 @@ public class DurpcDemoConsumerApplication {
 
         // 测试long类型
         System.out.println("Case 6. >>===[常规int类型，返回User对象]===");
-        System.out.println("userService.getId(10) = " + userService.getId(10));
+        System.out.println("userService.getId(10) = " + userService.getId(10L));
 
         // 测试long+float类型
         System.out.println("Case 7. >>===[测试long+float类型]===");
