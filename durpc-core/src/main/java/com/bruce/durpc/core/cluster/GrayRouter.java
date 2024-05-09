@@ -2,6 +2,8 @@ package com.bruce.durpc.core.cluster;
 
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.meta.InstanceMeta;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,9 @@ import java.util.Random;
  */
 public class GrayRouter implements Router<InstanceMeta> {
 
-    private int grayRatio;
+    @Getter
+    @Setter
+    private int grayRatio = -1;
     private final Random random = new Random();
 
 
