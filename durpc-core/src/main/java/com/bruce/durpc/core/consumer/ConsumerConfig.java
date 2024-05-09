@@ -33,7 +33,7 @@ public class ConsumerConfig {
     }
 
     @Bean
-    @Order(Integer.MIN_VALUE)
+    @Order(Integer.MIN_VALUE + 1)
     public ApplicationRunner consumerBootstrap_runner(@Autowired ConsumerBootstrap consumerBootstrap){
         return x ->{
             log.info("consumerBootstrap_runner ===== start");

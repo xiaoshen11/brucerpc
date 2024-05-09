@@ -1,11 +1,13 @@
 package com.bruce.durpc.core.provider;
 
+import com.bruce.durpc.core.api.RpcContext;
 import com.bruce.durpc.core.api.RpcException;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.meta.ProviderMeta;
 import com.bruce.durpc.core.util.TypeUtils;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.MultiValueMap;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +20,7 @@ import java.util.Optional;
  * @date 2024/3/20
  */
 @Data
+@Slf4j
 public class ProviderInvoker {
 
 
@@ -28,6 +31,10 @@ public class ProviderInvoker {
     }
 
     public RpcResponse invoke(RpcRequest request) {
+        log.debug(" ===> ProviderInvoker.invoke(request:{})", request);
+        if(!request.getParams().isEmpty()) {
+            request.getParams().forEach(RpcContext::setContextParameter);
+        }
         RpcResponse rpcResponse = new RpcResponse();
         List<ProviderMeta> providerMetaList = skeleton.get(request.getService());
         try {
