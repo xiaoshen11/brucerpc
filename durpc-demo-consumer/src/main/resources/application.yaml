@@ -4,6 +4,9 @@ durpc:
   zkServer: localhost:2181
   zkRoot: durpc
 
+duregistry:
+  servers: http://localhost:8484
+
 app:
   id: app1
   namespace: public

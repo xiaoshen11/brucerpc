@@ -16,7 +16,7 @@ public interface HttpInvoker {
 
     Logger log = LoggerFactory.getLogger(HttpInvoker.class);
 
-    HttpInvoker Default = new OkHttpInvoker(500);
+    HttpInvoker Default = new OkHttpInvoker(1000);
 
     RpcResponse<?> post(RpcRequest rpcRequest, String url);
 

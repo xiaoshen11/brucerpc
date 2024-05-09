@@ -1,7 +1,7 @@
 package com.bruce.durpc.core.provider;
 
 import com.bruce.durpc.core.api.RegistryCenter;
-import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
+import com.bruce.durpc.core.registry.du.DuRegistryCenter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -29,7 +29,7 @@ public class ProviderConfig {
 
     @Bean//(initMethod = "start",destroyMethod = "stop")
     public RegistryCenter provider_rc(){
-        return new ZkRegistryCenter();
+        return new DuRegistryCenter();
     }
 
     @Bean

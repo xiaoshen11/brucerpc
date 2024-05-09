@@ -7,11 +7,12 @@ import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.cluster.GrayRouter;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
 import com.bruce.durpc.core.meta.InstanceMeta;
-import com.bruce.durpc.core.registry.zk.ZkRegistryCenter;
+import com.bruce.durpc.core.registry.du.DuRegistryCenter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -53,8 +54,9 @@ public class ConsumerConfig {
     }
 
     @Bean(initMethod = "start",destroyMethod = "stop")
+    @ConditionalOnMissingBean
     public RegistryCenter consumer_rc(){
-        return new ZkRegistryCenter();
+        return new DuRegistryCenter();
     }
 
     @Bean
