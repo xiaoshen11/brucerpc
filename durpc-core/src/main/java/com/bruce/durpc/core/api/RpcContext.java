@@ -1,5 +1,6 @@
 package com.bruce.durpc.core.api;
 
+import com.bruce.durpc.core.config.ConsumerProperties;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import lombok.Data;
 
@@ -20,6 +21,8 @@ public class RpcContext {
     LoadBalancer<InstanceMeta> loadBalancer;
 
     Map<String,String> parameters = new HashMap<>();
+
+    private ConsumerProperties consumerProperties;
 
     public String param(String key) {
         return parameters.get(key);

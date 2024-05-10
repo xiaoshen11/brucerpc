@@ -7,7 +7,7 @@ GET http://localhost:8081/ports?ports=8080,8094
 Content-Type: application/json
 
 ### 获取8089用户信息
-GET http://localhost:8089/?id=66
+GET http://localhost:8089/api?id=66
 Content-Type: application/json
 
 

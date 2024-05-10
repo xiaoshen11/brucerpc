@@ -2,7 +2,7 @@ package com.bruce.durpc.demo.provider;
 
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
-import com.bruce.durpc.core.provider.ProviderConfig;
+import com.bruce.durpc.core.config.ProviderConfig;
 import com.bruce.durpc.core.provider.ProviderInvoker;
 import com.bruce.durpc.core.transport.SpringBootTransport;
 import com.bruce.durpc.demo.api.UserService;

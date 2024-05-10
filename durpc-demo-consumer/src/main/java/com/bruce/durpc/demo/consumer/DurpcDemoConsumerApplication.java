@@ -1,7 +1,7 @@
 package com.bruce.durpc.demo.consumer;
 
 import com.bruce.durpc.core.annotation.DuConsumer;
-import com.bruce.durpc.core.consumer.ConsumerConfig;
+import com.bruce.durpc.core.config.ConsumerConfig;
 import com.bruce.durpc.demo.api.User;
 import com.bruce.durpc.demo.api.UserService;
 import org.springframework.boot.ApplicationRunner;
@@ -33,8 +33,8 @@ public class DurpcDemoConsumerApplication {
         SpringApplication.run(DurpcDemoConsumerApplication.class, args);
     }
 
-    @RequestMapping("/")
-    public User findById(int id){
+    @RequestMapping("/api")
+    public User findById(@RequestParam("id") int id){
         return userService.findById(id);
     }
 

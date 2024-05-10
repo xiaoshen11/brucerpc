@@ -1,32 +1,40 @@
-package com.bruce.durpc.core.consumer;
+package com.bruce.durpc.core.config;
 
 import com.bruce.durpc.core.api.Filter;
 import com.bruce.durpc.core.api.LoadBalancer;
 import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
+import com.bruce.durpc.core.api.RpcContext;
 import com.bruce.durpc.core.cluster.GrayRouter;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
+import com.bruce.durpc.core.consumer.ConsumerBootstrap;
 import com.bruce.durpc.core.filter.ContextParameterFilter;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.registry.du.DuRegistryCenter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
+
+import java.util.List;
 
 /**
  * @date 2024/3/7
  */
 @Configuration
 @Slf4j
+@Import({AppProperties.class, ConsumerProperties.class})
 public class ConsumerConfig {
 
-    @Value("${app.grayRatio}")
-    private int grayRatio;
+    @Autowired
+    AppProperties appProperties;
+
+    @Autowired
+    ConsumerProperties consumerProperties;
 
     @Bean
     ConsumerBootstrap consumerBootstrap(){
@@ -51,7 +59,7 @@ public class ConsumerConfig {
 
     @Bean
     public Router<InstanceMeta> router(){
-        return new GrayRouter(grayRatio);
+        return new GrayRouter(consumerProperties.getGrayRatio());
     }
 
     @Bean(initMethod = "start",destroyMethod = "stop")
@@ -77,4 +85,19 @@ public class ConsumerConfig {
 //        return new MockFilter();
 //    }
 
+    @Bean
+//    @RefreshScope
+    public RpcContext creteContext(@Autowired Router router,
+                                   @Autowired LoadBalancer loadBalancer,
+                                   @Autowired List<Filter> filters) {
+        RpcContext context = new RpcContext();
+        context.setRouter(router);
+        context.setLoadBalancer(loadBalancer);
+        context.setFilters(filters);
+        context.getParameters().put("app.id", appProperties.getId());
+        context.getParameters().put("app.namespace", appProperties.getNamespace());
+        context.getParameters().put("app.env", appProperties.getEnv());
+        context.setConsumerProperties(consumerProperties);
+        return context;
+    }
 }

@@ -26,8 +26,8 @@ public class ProviderInvoker {
 
     private MultiValueMap<String, ProviderMeta> skeleton;
 
-    public ProviderInvoker(ProviderBootstrp providerBootstrp) {
-        this.skeleton = providerBootstrp.getSkeleton();
+    public ProviderInvoker(ProviderBootstrap providerBootstrap) {
+        this.skeleton = providerBootstrap.getSkeleton();
     }
 
     public RpcResponse invoke(RpcRequest request) {
