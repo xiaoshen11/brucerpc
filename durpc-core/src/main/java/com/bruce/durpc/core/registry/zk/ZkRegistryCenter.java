@@ -30,10 +30,10 @@ public class ZkRegistryCenter implements RegistryCenter {
 
     private CuratorFramework client = null;
 
-    @Value("${durpc.zkServer}")
+    @Value("${durpc.zk.server:localhost:2181}")
     String servers;
 
-    @Value("${durpc.zkRoot}")
+    @Value("${durpc.zk.root:durpc}")
     String root;
 
     @Override

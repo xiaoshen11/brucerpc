@@ -1,19 +1,25 @@
 server:
   port: 8089
+
 durpc:
-  zkServer: localhost:2181
-  zkRoot: durpc
+  zk:
+    server: localhost:2181
+    root: durpc
+  app:
+    id: app1
+    namespace: public
+    env: dev
+  consumer:
+    faultLimit: 10
+    grayRatio: 33
+    halfOpenDelay: 60000
+    halfOpenInitialDelay: 10000
+    retries: 2
+    timeout: 1000
 
 duregistry:
   servers: http://localhost:8484
 
-app:
-  id: app1
-  namespace: public
-  env: dev
-  retries: 2
-  timeout: 1000
-  grayRatio: 10  #10-100
 
 logging:
   level:

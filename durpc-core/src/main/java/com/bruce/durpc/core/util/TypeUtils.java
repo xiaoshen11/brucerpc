@@ -109,7 +109,7 @@ public class TypeUtils {
                 return resultMap;
             }
             if(data instanceof JSONObject jsonObject) {// 此时是Pojo，且数据是JO
-                og.debug(" ======> JSONObject -> Pojo");
+                log.debug(" ======> JSONObject -> Pojo");
                 return jsonObject.toJavaObject(type);
             }else if(!Map.class.isAssignableFrom(type)){ // 此时是Pojo类型，数据是Map
                 log.debug(" ======> map -> Pojo");
