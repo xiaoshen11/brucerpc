@@ -4,6 +4,7 @@ import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.provider.ProviderConfig;
 import com.bruce.durpc.core.provider.ProviderInvoker;
+import com.bruce.durpc.core.transport.SpringBootTransport;
 import com.bruce.durpc.demo.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -34,6 +35,9 @@ public class DurpcDemoProviderApplication {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	SpringBootTransport transport;
+
 	@RequestMapping("/")
 	public RpcResponse invoke(@RequestBody RpcRequest request){
 		return providerInvoker.invoke(request);
@@ -56,7 +60,7 @@ public class DurpcDemoProviderApplication {
 			request.setMethodSign("findById@1_int");
 			request.setArgs(new Object[]{10});
 
-			RpcResponse rpcResponse = invoke(request);
+			RpcResponse rpcResponse = transport.invoke(request);
 			System.out.println("return : " + rpcResponse.getData());
 
 			RpcRequest request2 = new RpcRequest();
@@ -64,7 +68,7 @@ public class DurpcDemoProviderApplication {
 			request2.setMethodSign("findById@2_int_java.lang.String");
 			request2.setArgs(new Object[]{12,"bruce"});
 
-			RpcResponse rpcResponse2 = invoke(request2);
+			RpcResponse rpcResponse2 = transport.invoke(request2);
 			System.out.println("return : " + rpcResponse2.getData());
 		};
 	}

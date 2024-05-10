@@ -6,6 +6,7 @@ import com.bruce.durpc.core.api.RegistryCenter;
 import com.bruce.durpc.core.api.Router;
 import com.bruce.durpc.core.cluster.GrayRouter;
 import com.bruce.durpc.core.cluster.RandomRobinLoadBalancer;
+import com.bruce.durpc.core.filter.ContextParameterFilter;
 import com.bruce.durpc.core.meta.InstanceMeta;
 import com.bruce.durpc.core.registry.du.DuRegistryCenter;
 import lombok.extern.slf4j.Slf4j;
@@ -60,8 +61,8 @@ public class ConsumerConfig {
     }
 
     @Bean
-    public Filter filter2(){
-        return Filter.Default;
+    public Filter defaultFilter(){
+        return new ContextParameterFilter();
     }
 
 //    @Bean
