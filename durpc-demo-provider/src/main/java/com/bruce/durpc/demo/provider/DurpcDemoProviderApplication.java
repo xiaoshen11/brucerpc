@@ -1,8 +1,10 @@
 package com.bruce.durpc.demo.provider;
 
+import com.bruce.duconfig.client.annotation.EnableDuConfig;
 import com.bruce.durpc.core.api.RpcRequest;
 import com.bruce.durpc.core.api.RpcResponse;
 import com.bruce.durpc.core.config.ProviderConfig;
+import com.bruce.durpc.core.config.ProviderProperties;
 import com.bruce.durpc.core.provider.ProviderInvoker;
 import com.bruce.durpc.core.transport.SpringBootTransport;
 import com.bruce.durpc.demo.api.UserService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+@EnableDuConfig
 @Import({ProviderConfig.class})
 public class DurpcDemoProviderApplication {
 
@@ -38,9 +41,18 @@ public class DurpcDemoProviderApplication {
 	@Autowired
 	SpringBootTransport transport;
 
+	@Autowired
+	ProviderProperties providerProperties;
+
 	@RequestMapping("/")
 	public RpcResponse invoke(@RequestBody RpcRequest request){
 		return providerInvoker.invoke(request);
+	}
+
+	@RequestMapping("/metas")
+	public String meta() {
+		System.out.println(System.identityHashCode(providerProperties.getMetas()));
+		return providerProperties.getMetas().toString();
 	}
 
 	@RequestMapping("/ports")

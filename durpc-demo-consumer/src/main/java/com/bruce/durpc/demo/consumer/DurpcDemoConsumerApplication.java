@@ -1,5 +1,6 @@
 package com.bruce.durpc.demo.consumer;
 
+import com.bruce.duconfig.client.annotation.EnableDuConfig;
 import com.bruce.durpc.core.annotation.DuConsumer;
 import com.bruce.durpc.core.config.ConsumerConfig;
 import com.bruce.durpc.demo.api.User;
@@ -21,6 +22,7 @@ import java.util.Map;
 @SpringBootApplication
 @Import(ConsumerConfig.class)
 @RestController
+@EnableDuConfig
 public class DurpcDemoConsumerApplication {
 
     @DuConsumer
